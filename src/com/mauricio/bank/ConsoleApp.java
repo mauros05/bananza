@@ -29,12 +29,16 @@ public class ConsoleApp {
                     case "3" -> withdraw();
                     case "4" -> transfer();
                     case "5" -> showBalance();
+                    case "0" -> running = false;
+                    default -> System.out.println("Opcion no valida.");
                 }
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
             }
 
+            System.out.println();
         }
-
-
+        System.out.println("Hasta luego");
     }
 
     private void createAccount(){
