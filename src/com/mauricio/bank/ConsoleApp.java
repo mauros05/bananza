@@ -27,6 +27,8 @@ public class ConsoleApp {
                     case "1" -> createAccount();
                     case "2" -> deposit();
                     case "3" -> withdraw();
+                    case "4" -> transfer();
+                    case "5" -> showBalance();
                 }
             }
 
@@ -58,6 +60,20 @@ public class ConsoleApp {
 
         bank.getAccount(number).withdraw(amount);
         System.out.println("Retiro realizado");
+    }
+
+    private void transfer(){
+        String from = readLine("Numero de cuenta de origen: ");
+        String to = readLine("Numero de cuenta destino: ");
+        BigDecimal amount = readMoney("Cantidad a transferir: ");
+
+        bank.transfer(from, to, amount);
+        System.out.println("Transferencia realizada con exito");
+    }
+
+    private void showBalance(){
+        String number = readLine("Numero de cuenta: ");
+        System.out.println("Saldo actual: " + bank.getAccount(number).getBalance());
     }
 
     private void printMenu(){
