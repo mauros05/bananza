@@ -20,11 +20,44 @@ public class ConsoleApp {
 
         while (running) {
             printMenu();
-            String option =
+            String option = readLine("Seleccione una opcion: ");
+
+            try {
+                switch (option) {
+                    case "1" -> createAccount();
+                    case "2" -> deposit();
+                    case "3" -> withdraw();
+                }
+            }
 
         }
 
 
+    }
+
+    private void createAccount(){
+        String number = readLine("Numero de cuenta: ");
+        String owner = readLine("Nombre del dueño: ");
+        BigDecimal initialBalance = readMoney("Saldo inicial: ");
+
+        bank.createAccount(number, owner, initialBalance);
+        System.out.println("Cuenta creada");
+    }
+
+    private void deposit(){
+        String number = readLine("Numero de cuenta: ");
+        BigDecimal amount = readMoney("Cantidad a depositar: ");
+
+        bank.getAccount(number).deposit(amount);
+        System.out.println("Deposito realizado");
+    }
+
+    private void withdraw(){
+        String number = readLine("Numero de cuenta: ");
+        BigDecimal amount = readMoney("Cantidad a retirar: ");
+
+        bank.getAccount(number).withdraw(amount);
+        System.out.println("Retiro realizado");
     }
 
     private void printMenu(){
