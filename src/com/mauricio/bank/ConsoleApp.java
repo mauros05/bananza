@@ -91,6 +91,8 @@ public class ConsoleApp {
                 """);
     }
 
+//    Lectura y validaciones
+
     private String readLine(String prompt) {
         System.out.print(prompt);
         return scanner.nextLine().trim();

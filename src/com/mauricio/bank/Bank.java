@@ -39,6 +39,24 @@ public class Bank {
         return account;
     }
 
+    public void deposit(String accountNumber, BigDecimal amount){
+        Account account = getAccount(accountNumber);
+        BigDecimal normalized = normalizeMoney(amount);
+        account.deposit(normalized);
+
+        record(accountNumber, TransactionType.DEPOSIT, normalized, "Deposit");
+        log.info(() -> "DEPOSIT account=" + accountNumber + " amount=" + normalized);
+    }
+
+    public void withdraw(String accountNumber, BigDecimal amount){
+        Account account = getAccount(accountNumber);
+        BigDecimal normalized = normalizeMoney(amount);
+        account.withdraw(normalized);
+
+        record(accountNumber, TransactionType.WITHDRAW, normalized, "Withdraw");
+        log.info(() -> "WITHDRAW account=" + accountNumber + " amount=" + normalized);
+    }
+
     public void transfer(String fromAccountNumber, String toAccountNumber, BigDecimal amount) {
         if (fromAccountNumber.equals(toAccountNumber)) {
             throw new IllegalArgumentException("from and to accounts must be different");
@@ -47,12 +65,23 @@ public class Bank {
         Account from = getAccount(fromAccountNumber);
         Account to = getAccount(toAccountNumber);
 
-        // Primero retiramos, si falla por fondos insuficientes no depositamos.
-        from.withdraw(amount);
-        to.deposit(amount);
+        BigDecimal normalized = normalizeMoney(amount);
 
-        log("TRANSFER", "from=" + fromAccountNumber + ", to=" + toAccountNumber + ", amount=" + amount);
+        // Primero retiramos, si falla por fondos insuficientes no depositamos.
+        from.withdraw(normalized);
+        to.deposit(normalized);
+
+        record(fromAccountNumber, TransactionType.TRANSFER_OUT, normalized, "Transfer to " + toAccountNumber);
+        record(toAccountNumber, TransactionType.TRANSFER_IN, normalized, "Transfer from " + fromAccountNumber);
+
+        log.info(() -> "TRANSFER from=" + fromAccountNumber + ", to=" + toAccountNumber + ", amount=" + amount);
     }
+
+    public List<Transaction> getTransactions(String accountNumber) {
+        getAccount(accountNumber);
+        return Collections.unmodifiableList(transactionsByAccount.get(accountNumber));
+    }
+
 
 
     //    Helpers
