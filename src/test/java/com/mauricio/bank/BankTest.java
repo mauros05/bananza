@@ -14,6 +14,27 @@ class BankTest {
 
         assertEquals(new BigDecimal("100.00"), bank.getAccount("001").getBalance());
         assertEquals(1, bank.getTransactions("001").size());
-        assertEquals(TransactionType.ACCOUNT_CREATED, bank.getTransactions("001").get(0).type());
+        assertEquals(TransactionType.ACCOUNT_CREATED, bank.getTransactions("001").getFirst().type());
     }
+
+    @Test
+    void withdraw_withoutEnoughFounds_throwException(){
+        Bank bank = new Bank();
+        bank.createAccount("001", "Mauricio", new BigDecimal("300.00"));
+
+        assertThrows(InsufficientFundsException.class, () -> bank.withdraw("001", new BigDecimal("400.00")));
+    }
+
+    @Test
+    void transfer_createsTwoTransactions() {
+        Bank bank = new Bank();
+        bank.createAccount("001", "Mauricio", new BigDecimal("400.00"));
+        bank.createAccount("003", "Fanny", new BigDecimal("500.00"));
+
+        bank.transfer("001", "003", new BigDecimal("300.00"));
+
+        assertEquals(2, bank.getTransactions("001").size());
+        assertEquals(2, bank.getTransactions("003").size());
+    }
+
 }
