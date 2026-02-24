@@ -1,9 +1,7 @@
 package com.mauricio.bank;
 
 import org.junit.jupiter.api.Test;
-
 import java.math.BigDecimal;
-
 import  static org.junit.jupiter.api.Assertions.*;
 
 class BankTest {
@@ -35,6 +33,18 @@ class BankTest {
 
         assertEquals(2, bank.getTransactions("001").size());
         assertEquals(2, bank.getTransactions("003").size());
+    }
+
+    @Test
+    void createAccount_withInvalidAccountNumber_throwsException(){
+        Bank bank = new Bank();
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () ->bank.createAccount("001a",
+                                            "Mauricio",
+                                        new BigDecimal("100.00")));
+
+        assertTrue(ex.getMessage().toLowerCase().contains("digits"));
     }
 
 }
