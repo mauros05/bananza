@@ -20,13 +20,15 @@ public class Bank {
             throw new IllegalArgumentException("Account already exists: " + accountNumber);
         }
 
-        Account account = new Account(accountNumber, ownerName, initialBalance);
+        BigDecimal normalizeInitial = normalizeInitialBalance(initialBalance);
+
+        Account account = new Account(accountNumber, ownerName, normalizeInitial);
         accountsByNumber.put(accountNumber, account);
         transactionsByAccount.put(accountNumber, new ArrayList<>());
 
 
         record(accountNumber, TransactionType.ACCOUNT_CREATED, initialBalance, "Account created");
-        log.info(() -> "ACCOUNT_CREATED account=" + accountNumber + ", owner=" + ownerName + ", initialBalance=" + initialBalance);
+        log.info(() -> "ACCOUNT_CREATED account=" + accountNumber + ", owner=" + ownerName + ", initialBalance=" + normalizeInitial);
 
         return account;
     }
@@ -74,7 +76,7 @@ public class Bank {
         record(fromAccountNumber, TransactionType.TRANSFER_OUT, normalized, "Transfer to " + toAccountNumber);
         record(toAccountNumber, TransactionType.TRANSFER_IN, normalized, "Transfer from " + fromAccountNumber);
 
-        log.info(() -> "TRANSFER from=" + fromAccountNumber + ", to=" + toAccountNumber + ", amount=" + amount);
+        log.info(() -> "TRANSFER from=" + fromAccountNumber + ", to=" + toAccountNumber + ", amount=" + normalized);
     }
 
     public List<Transaction> getTransactions(String accountNumber) {
@@ -82,9 +84,7 @@ public class Bank {
         return Collections.unmodifiableList(transactionsByAccount.get(accountNumber));
     }
 
-
-
-    //    Helpers
+    // --Helpers
 
     private void record(String accountNumber, TransactionType type,  BigDecimal amount, String description){
         transactionsByAccount.get(accountNumber).add(
@@ -108,6 +108,12 @@ public class Bank {
         if (value == null) throw new IllegalArgumentException("Amount is required");
         if (value.compareTo(BigDecimal.ZERO) <= 0) throw new IllegalArgumentException("amount must be > 0");
 
+        return value.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    private BigDecimal normalizeInitialBalance(BigDecimal value){
+        if (value == null) throw  new IllegalArgumentException("InitialBalance is required");
+        if (value.compareTo(BigDecimal.ZERO) < 0) throw new IllegalArgumentException("Initial balance must be greater or equal than 0");
         return value.setScale(2, RoundingMode.HALF_UP);
     }
 }
