@@ -47,4 +47,45 @@ class BankTest {
         assertTrue(ex.getMessage().toLowerCase().contains("digits"));
     }
 
+    @Test
+    void deposit_withZeroOrNegativeAmount_throwsException(){
+        Bank bank = new Bank();
+        bank.createAccount("001", "Mauricio", new BigDecimal("10.00"));
+
+        assertThrows(IllegalArgumentException.class, () -> bank.deposit("001", new BigDecimal("0.00")));
+        assertThrows(IllegalArgumentException.class, () -> bank.deposit("001", new BigDecimal("-1.00")));
+    }
+
+    @Test
+    void transfer_toSameAccount_throwsException(){
+        Bank bank = new Bank();
+        bank.createAccount("001", "Mauricio", new BigDecimal("100.00"));
+
+        assertThrows(IllegalArgumentException.class, () -> bank.transfer("001", "001", new BigDecimal("10.00")));
+
+    }
+
+    @Test
+    void transfer_updatesBalanceCorrectly(){
+        Bank bank = new Bank();
+        bank.createAccount("001", "Mauricio", new BigDecimal("100.00"));
+        bank.createAccount("002", "Fanny", new BigDecimal("50.00"));
+
+        bank.transfer("001", "002", new BigDecimal("20.00"));
+
+        assertEquals(new BigDecimal("80.00"), bank.getAccount("001").getBalance());
+        assertEquals(new BigDecimal("70.00"), bank.getAccount("002").getBalance());
+
+    }
+
+    @Test
+    void deposit_normalizesMoneyToTwoDecimals(){
+        Bank bank = new Bank();
+        bank.createAccount("001", "Mauricio", new BigDecimal("0.00"));
+
+        bank.deposit("001", new BigDecimal("10.1"));
+
+        assertEquals(new BigDecimal("10.10"), bank.getAccount("001").getBalance());
+    }
+
 }
