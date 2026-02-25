@@ -5,20 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="01c81304-4e12-4df9-8a2a-f629f521908a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bananza.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mauricio/bank/Bank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mauricio/bank/Bank.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mauricio/bank/ConsoleApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mauricio/bank/ConsoleApp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mauricio/bank/Transaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mauricio/bank/Transaction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/mauricio/bank/BankTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/mauricio/bank/BankTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/mauricio/bank/Bank.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mauricio/bank/Bank.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/mauricio/bank/ConsoleApp.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mauricio/bank/ConsoleApp.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/mauricio/bank/Transaction.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mauricio/bank/Transaction.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.mauricio.bank.BankTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.mauricio.bank.BankTest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.mauricio.bank.BankTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.mauricio.bank.BankTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/mauricio/bank/BankTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/mauricio/bank/BankTest.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,9 +33,9 @@
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 1
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
   <component name="ProjectId" id="39xOhZFCzwdSTPeDeXyVPUAIkXe" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -50,7 +43,8 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Application.Main.executor": "Run",
+    "Application.Main.executor": "Coverage",
+    "JUnit.BankTest.concurrentTransfers_doNotLoseMoney.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
@@ -67,7 +61,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="JUnit.BankTest.concurrentTransfers_doNotLoseMoney">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.mauricio.bank.Main" />
       <module name="bananza" />
@@ -81,8 +75,25 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="BankTest.concurrentTransfers_doNotLoseMoney" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="bananza" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.mauricio.bank.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.mauricio.bank" />
+      <option name="MAIN_CLASS_NAME" value="com.mauricio.bank.BankTest" />
+      <option name="METHOD_NAME" value="concurrentTransfers_doNotLoseMoney" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.BankTest.concurrentTransfers_doNotLoseMoney" />
         <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
@@ -102,7 +113,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1771634374626</updated>
-      <workItem from="1771634375821" duration="34273000" />
+      <workItem from="1771634375821" duration="40955000" />
     </task>
     <servers />
   </component>
@@ -110,8 +121,8 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/bananza$Main.ic" NAME="Main Coverage Results" MODIFIED="1771911828889" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
-      <FILTER>com.mauricio.bank.*</FILTER>
+    <SUITE FILE_PATH="coverage/bananza$Main.ic" NAME="Main Coverage Results" MODIFIED="1772043505130" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>test.*</FILTER>
     </SUITE>
   </component>
 </project>

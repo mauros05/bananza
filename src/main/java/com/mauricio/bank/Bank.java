@@ -12,6 +12,7 @@ public class Bank {
 
     private final Map<String, Account> accountsByNumber = new HashMap<>();
     private final Map<String, List<Transaction>> transactionsByAccount = new HashMap<>();
+    private final Map<String, Object> accountLocks = new HashMap<>();
 
     public Account createAccount(String accountNumber, String ownerName, BigDecimal initialBalance) {
         validateAccountNumber(accountNumber);
@@ -25,6 +26,7 @@ public class Bank {
 
         Account account = new Account(accountNumber, ownerName, normalizeInitial);
         accountsByNumber.put(accountNumber, account);
+        accountLocks.put(accountNumber, new Object());
         transactionsByAccount.put(accountNumber, new ArrayList<>());
 
 
@@ -72,24 +74,34 @@ public class Bank {
             throw new IllegalArgumentException("from and to accounts must be different");
         }
 
-        Account from = getAccount(fromAccountNumber);
-        Account to = getAccount(toAccountNumber);
         BigDecimal normalized = normalizeMoney(amount);
 
-        // Primero retiramos, si falla por fondos insuficientes no depositamos.
+        String first  = fromAccountNumber.compareTo(toAccountNumber) < 0 ? fromAccountNumber : toAccountNumber;
+        String second = toAccountNumber.compareTo(fromAccountNumber) < 0 ? toAccountNumber : fromAccountNumber;
 
-        BigDecimal fromBefore = from.getBalance();
-        from.withdraw(normalized);
-        BigDecimal fromAfter = from.getBalance();
 
-        BigDecimal toBefore = to.getBalance();
-        to.deposit(normalized);
-        BigDecimal toAfter = to.getBalance();
+        synchronized (lockFor(first)){
+            synchronized (lockFor(second)){
 
-        record(fromAccountNumber, TransactionType.TRANSFER_OUT, normalized, fromBefore, fromAfter,"Transfer to " + toAccountNumber);
-        record(toAccountNumber, TransactionType.TRANSFER_IN, normalized, toBefore, toAfter,"Transfer from " + fromAccountNumber);
+                Account from = getAccount(fromAccountNumber);
+                Account to = getAccount(toAccountNumber);
 
-        log.info(() -> "TRANSFER from=" + fromAccountNumber + ", to=" + toAccountNumber + ", amount=" + normalized);
+                // Primero retiramos, si falla por fondos insuficientes no depositamos.
+
+                BigDecimal fromBefore = from.getBalance();
+                from.withdraw(normalized);
+                BigDecimal fromAfter = from.getBalance();
+
+                BigDecimal toBefore = to.getBalance();
+                to.deposit(normalized);
+                BigDecimal toAfter = to.getBalance();
+
+                record(fromAccountNumber, TransactionType.TRANSFER_OUT, normalized, fromBefore, fromAfter,"Transfer to " + toAccountNumber);
+                record(toAccountNumber, TransactionType.TRANSFER_IN, normalized, toBefore, toAfter,"Transfer from " + fromAccountNumber);
+
+                log.info(() -> "TRANSFER from=" + fromAccountNumber + ", to=" + toAccountNumber + ", amount=" + normalized);
+            }
+        }
     }
 
     public List<Transaction> getTransactions(String accountNumber) {
@@ -136,5 +148,11 @@ public class Bank {
         if (value == null) throw  new IllegalArgumentException("InitialBalance is required");
         if (value.compareTo(BigDecimal.ZERO) < 0) throw new IllegalArgumentException("Initial balance must be greater or equal than 0");
         return value.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    private Object lockFor(String accountNumber) {
+        Object lock = accountLocks.get(accountNumber);
+        if (lock == null) throw new IllegalArgumentException("Account not found: " + accountNumber);
+        return lock;
     }
 }

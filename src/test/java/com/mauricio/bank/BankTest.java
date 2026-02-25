@@ -2,6 +2,8 @@ package com.mauricio.bank;
 
 import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
+import java.util.concurrent.TimeUnit;
+
 import  static org.junit.jupiter.api.Assertions.*;
 
 class BankTest {
@@ -87,5 +89,35 @@ class BankTest {
 
         assertEquals(new BigDecimal("10.10"), bank.getAccount("001").getBalance());
     }
+
+    @Test
+    void concurrentTransfers_doNotLoseMoney() throws Exception {
+        Bank bank = new Bank();
+        bank.createAccount("001", "A", new BigDecimal("1000.00"));
+        bank.createAccount("002", "B", new BigDecimal("1000.00"));
+
+        int threads = 20;
+        int transferPerThread = 200;
+
+        var executor = java.util.concurrent.Executors.newFixedThreadPool(threads);
+
+        for (int t = 0; t < threads; t ++){
+            executor.submit(() -> {
+                for (int i = 0; i < transferPerThread; i ++){
+                    bank.transfer("001", "002", new BigDecimal("1.00"));
+                    bank.transfer("002", "001", new BigDecimal("1.00"));
+                }
+            });
+        }
+
+        executor.shutdown();
+        boolean finished = executor.awaitTermination(20, TimeUnit.SECONDS);
+        assertTrue(finished);
+
+        BigDecimal total = bank.getAccount("001").getBalance().add(bank.getAccount("002").getBalance());
+        assertEquals(new BigDecimal("2000.00"), total);
+    }
+
+
 
 }
