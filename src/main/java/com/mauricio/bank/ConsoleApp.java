@@ -96,7 +96,9 @@ public class ConsoleApp {
             System.out.println(
                     tx.occurredAt() + " | " +
                     tx.type() + " | " +
-                    tx.amount() + " | " +
+                    "atm=" + tx.amount() + " | " +
+                    "before=" + tx.balanceBefore() + " | " +
+                    "after=" + tx.balanceAfter() + " | " +
                     tx.description()
             );
         }

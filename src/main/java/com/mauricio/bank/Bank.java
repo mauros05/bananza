@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.UUID;
 
 public class Bank {
     private static final Logger log = Logger.getLogger(Bank.class.getName());
@@ -27,7 +28,7 @@ public class Bank {
         transactionsByAccount.put(accountNumber, new ArrayList<>());
 
 
-        record(accountNumber, TransactionType.ACCOUNT_CREATED, initialBalance, "Account created");
+        record(accountNumber, TransactionType.ACCOUNT_CREATED, normalizeInitial, new BigDecimal("0.00"), normalizeInitial,"Account created");
         log.info(() -> "ACCOUNT_CREATED account=" + accountNumber + ", owner=" + ownerName + ", initialBalance=" + normalizeInitial);
 
         return account;
@@ -44,18 +45,25 @@ public class Bank {
     public void deposit(String accountNumber, BigDecimal amount){
         Account account = getAccount(accountNumber);
         BigDecimal normalized = normalizeMoney(amount);
-        account.deposit(normalized);
 
-        record(accountNumber, TransactionType.DEPOSIT, normalized, "Deposit");
+        BigDecimal before = account.getBalance();
+        account.deposit(normalized);
+        BigDecimal after = account.getBalance();
+
+
+        record(accountNumber, TransactionType.DEPOSIT, normalized, before, after,"Deposit");
         log.info(() -> "DEPOSIT account=" + accountNumber + " amount=" + normalized);
     }
 
     public void withdraw(String accountNumber, BigDecimal amount){
         Account account = getAccount(accountNumber);
         BigDecimal normalized = normalizeMoney(amount);
-        account.withdraw(normalized);
 
-        record(accountNumber, TransactionType.WITHDRAW, normalized, "Withdraw");
+        BigDecimal before = account.getBalance();
+        account.withdraw(normalized);
+        BigDecimal after = account.getBalance();
+
+        record(accountNumber, TransactionType.WITHDRAW, normalized, before, after,"Withdraw");
         log.info(() -> "WITHDRAW account=" + accountNumber + " amount=" + normalized);
     }
 
@@ -66,15 +74,20 @@ public class Bank {
 
         Account from = getAccount(fromAccountNumber);
         Account to = getAccount(toAccountNumber);
-
         BigDecimal normalized = normalizeMoney(amount);
 
         // Primero retiramos, si falla por fondos insuficientes no depositamos.
-        from.withdraw(normalized);
-        to.deposit(normalized);
 
-        record(fromAccountNumber, TransactionType.TRANSFER_OUT, normalized, "Transfer to " + toAccountNumber);
-        record(toAccountNumber, TransactionType.TRANSFER_IN, normalized, "Transfer from " + fromAccountNumber);
+        BigDecimal fromBefore = from.getBalance();
+        from.withdraw(normalized);
+        BigDecimal fromAfter = from.getBalance();
+
+        BigDecimal toBefore = to.getBalance();
+        to.deposit(normalized);
+        BigDecimal toAfter = to.getBalance();
+
+        record(fromAccountNumber, TransactionType.TRANSFER_OUT, normalized, fromBefore, fromAfter,"Transfer to " + toAccountNumber);
+        record(toAccountNumber, TransactionType.TRANSFER_IN, normalized, toBefore, toAfter,"Transfer from " + fromAccountNumber);
 
         log.info(() -> "TRANSFER from=" + fromAccountNumber + ", to=" + toAccountNumber + ", amount=" + normalized);
     }
@@ -86,9 +99,17 @@ public class Bank {
 
     // --Helpers
 
-    private void record(String accountNumber, TransactionType type,  BigDecimal amount, String description){
+    private void record(String accountNumber, TransactionType type,  BigDecimal amount, BigDecimal balanceBefore, BigDecimal balanceAfter, String description){
         transactionsByAccount.get(accountNumber).add(
-          new Transaction(accountNumber, type, amount, description, LocalDateTime.now())
+          new Transaction(UUID.randomUUID(),
+                          accountNumber,
+                          type,
+                          amount,
+                          balanceBefore,
+                          balanceAfter,
+                          description,
+                          LocalDateTime.now()
+          )
         );
     }
 
