@@ -114,7 +114,7 @@ class BankTest {
             boolean finished = executor.awaitTermination(20, TimeUnit.SECONDS);
             assertTrue(finished);
         }
-        
+
         BigDecimal total = bank.getAccount("001").getBalance().add(bank.getAccount("002").getBalance());
         assertEquals(new BigDecimal("2000.00"), total);
     }
