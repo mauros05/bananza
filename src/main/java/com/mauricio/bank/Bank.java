@@ -13,27 +13,31 @@ public class Bank {
     private final Map<String, Account> accountsByNumber = new HashMap<>();
     private final Map<String, List<Transaction>> transactionsByAccount = new HashMap<>();
     private final Map<String, Object> accountLocks = new HashMap<>();
+    private final Object accountsLock = new Object();
 
     public Account createAccount(String accountNumber, String ownerName, BigDecimal initialBalance) {
         validateAccountNumber(accountNumber);
         validateOwnerName(ownerName);
 
-        if (accountsByNumber.containsKey(accountNumber)) {
-            throw new IllegalArgumentException("Account already exists: " + accountNumber);
-        }
-
         BigDecimal normalizeInitial = normalizeInitialBalance(initialBalance);
 
-        Account account = new Account(accountNumber, ownerName, normalizeInitial);
-        accountsByNumber.put(accountNumber, account);
-        accountLocks.put(accountNumber, new Object());
-        transactionsByAccount.put(accountNumber, new ArrayList<>());
+        synchronized (accountsLock) {
+            if (accountsByNumber.containsKey(accountNumber)) {
+                throw new IllegalArgumentException("Account already exists: " + accountNumber);
+            }
 
+            Account account = new Account(accountNumber, ownerName, normalizeInitial);
+            accountsByNumber.put(accountNumber, account);
+            accountLocks.put(accountNumber, new Object());
+            transactionsByAccount.put(accountNumber, new ArrayList<>());
 
-        record(accountNumber, TransactionType.ACCOUNT_CREATED, normalizeInitial, new BigDecimal("0.00"), normalizeInitial,"Account created");
-        log.info(() -> "ACCOUNT_CREATED account=" + accountNumber + ", owner=" + ownerName + ", initialBalance=" + normalizeInitial);
+            record(accountNumber, TransactionType.ACCOUNT_CREATED, normalizeInitial, new BigDecimal("0.00"), normalizeInitial,"Account created");
 
-        return account;
+            log.info(() -> "ACCOUNT_CREATED account=" + accountNumber + ", owner=" + ownerName + ", initialBalance=" + normalizeInitial);
+
+            return account;
+        }
+
     }
 
     public Account getAccount(String accountNumber) {
@@ -45,28 +49,33 @@ public class Bank {
     }
 
     public void deposit(String accountNumber, BigDecimal amount){
-        Account account = getAccount(accountNumber);
         BigDecimal normalized = normalizeMoney(amount);
 
-        BigDecimal before = account.getBalance();
-        account.deposit(normalized);
-        BigDecimal after = account.getBalance();
+        synchronized (lockFor(accountNumber)){
+            Account account = getAccount(accountNumber);
 
+            BigDecimal before = account.getBalance();
+            account.deposit(normalized);
+            BigDecimal after = account.getBalance();
 
-        record(accountNumber, TransactionType.DEPOSIT, normalized, before, after,"Deposit");
-        log.info(() -> "DEPOSIT account=" + accountNumber + " amount=" + normalized);
+            record(accountNumber, TransactionType.DEPOSIT, normalized, before, after,"Deposit");
+            log.info(() -> "DEPOSIT account=" + accountNumber + " amount=" + normalized);
+        }
     }
 
     public void withdraw(String accountNumber, BigDecimal amount){
-        Account account = getAccount(accountNumber);
         BigDecimal normalized = normalizeMoney(amount);
 
-        BigDecimal before = account.getBalance();
-        account.withdraw(normalized);
-        BigDecimal after = account.getBalance();
+        synchronized (lockFor(accountNumber)){
+            Account account = getAccount(accountNumber);
 
-        record(accountNumber, TransactionType.WITHDRAW, normalized, before, after,"Withdraw");
-        log.info(() -> "WITHDRAW account=" + accountNumber + " amount=" + normalized);
+            BigDecimal before = account.getBalance();
+            account.withdraw(normalized);
+            BigDecimal after = account.getBalance();
+
+            record(accountNumber, TransactionType.WITHDRAW, normalized, before, after,"Withdraw");
+            log.info(() -> "WITHDRAW account=" + accountNumber + " amount=" + normalized);
+        }
     }
 
     public void transfer(String fromAccountNumber, String toAccountNumber, BigDecimal amount) {
@@ -77,7 +86,7 @@ public class Bank {
         BigDecimal normalized = normalizeMoney(amount);
 
         String first  = fromAccountNumber.compareTo(toAccountNumber) < 0 ? fromAccountNumber : toAccountNumber;
-        String second = toAccountNumber.compareTo(fromAccountNumber) < 0 ? toAccountNumber : fromAccountNumber;
+        String second = fromAccountNumber.compareTo(toAccountNumber) < 0 ? toAccountNumber : fromAccountNumber;
 
 
         synchronized (lockFor(first)){

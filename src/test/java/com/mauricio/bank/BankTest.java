@@ -120,5 +120,32 @@ class BankTest {
     }
 
 
+    @Test
+    void concurrentDeposits_sameAccount_doNotLoseMoney() throws Exception {
+        Bank bank = new Bank();
+        bank.createAccount("001", "A", new BigDecimal("0.00"));
+
+        int threads = 20;
+        int depositsPerThread = 500;
+        BigDecimal amount = new BigDecimal("1.00");
+
+        try (var executor = java.util.concurrent.Executors.newFixedThreadPool(threads)) {
+            for (int t = 0; t < threads; t++){
+                executor.submit(() -> {
+                   for (int i = 0; i < depositsPerThread; i++) {
+                       bank.deposit("001", amount);
+                   }
+                });
+            }
+
+            executor.shutdown();
+            boolean finished = executor.awaitTermination(20, TimeUnit.SECONDS);
+            assertTrue(finished);
+        }
+
+        BigDecimal expected = amount.multiply(new BigDecimal(threads * depositsPerThread));
+        assertEquals(expected, bank.getAccount("001").getBalance());
+    }
+    
 
 }
