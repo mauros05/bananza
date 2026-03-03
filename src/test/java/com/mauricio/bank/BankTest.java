@@ -146,6 +146,6 @@ class BankTest {
         BigDecimal expected = amount.multiply(new BigDecimal(threads * depositsPerThread));
         assertEquals(expected, bank.getAccount("001").getBalance());
     }
-    
+
 
 }
