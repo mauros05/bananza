@@ -32,7 +32,38 @@ public class BankController {
         );
     }
 
-    
+    @GetMapping("/accounts/{accountNumber}")
+    public Map<String, Object> getAccount(@PathVariable String accountNumber) {
+        var account = bank.getAccount(accountNumber);
+        return Map.of(
+                "accountNumber", account.getAccountNumber(),
+                "ownerName", account.getOwnerName(),
+                "balance", account.getBalance()
+        );
+    }
+
+    @PostMapping("/accounts/{accountNumber}/deposit")
+    public Map<String, BigDecimal> deposit(@PathVariable String accountNumber, @RequestBody MoneyRequest req) {
+        bank.deposit(accountNumber, req.amount());
+        return Map.of("balance", bank.getAccount(accountNumber).getBalance());
+    }
+
+    @PostMapping("/accounts/{accountNumber}/withdraw")
+    public Map<String, BigDecimal> withdraw(@PathVariable String accountNumber, @RequestBody MoneyRequest req) {
+        bank.withdraw(accountNumber, req.amount());
+        return Map.of("balance", bank.getAccount(accountNumber).getBalance());
+    }
+
+    @PostMapping("/transfers")
+    public Map<String, Object> transfer(@RequestBody TransferRequest req){
+        bank.transfer(req.fromAccountNumber(), req.toAccountNumber(), req.amount());
+        return Map.of("status", "OK");
+    }
+
+    @GetMapping("/accounts/{accountNumber}/transactions")
+    public List<Transaction> transactions(@PathVariable String accountNumber){
+        return bank.getTransactions(accountNumber);
+    }
 
 
 
