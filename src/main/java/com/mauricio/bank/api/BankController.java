@@ -6,6 +6,7 @@ import com.mauricio.bank.persistence.TransactionEntity;
 import com.mauricio.bank.service.BankService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class BankController {
     }
 
     @PostMapping("/accounts")
-    public AccountResponse createAccount(@RequestBody CreateAccountRequest req) {
+    public AccountResponse createAccount(@Valid @RequestBody CreateAccountRequest req) {
         var account = bankService.createAccount(req.accountNumber(), req.ownerName(), req.initialBalance());
         return toAccountResponse(account);
     }
@@ -31,20 +32,20 @@ public class BankController {
     }
 
     @PostMapping("/accounts/{accountNumber}/deposit")
-    public AccountResponse deposit(@PathVariable String accountNumber, @RequestBody MoneyRequest req) {
+    public AccountResponse deposit(@Valid @PathVariable String accountNumber, @RequestBody MoneyRequest req) {
         var account = bankService.deposit(accountNumber, req.amount());
         return toAccountResponse(account);
     }
 
     @PostMapping("/accounts/{accountNumber}/withdraw")
-    public AccountResponse withdraw(@PathVariable String accountNumber, @RequestBody MoneyRequest req) {
+    public AccountResponse withdraw(@Valid @PathVariable String accountNumber, @RequestBody MoneyRequest req) {
         var account = bankService.withdraw(accountNumber, req.amount());
         return toAccountResponse(account);
     }
 
     @PostMapping("/transfers")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void transfer(@RequestBody TransferRequest req){
+    public void transfer(@Valid @RequestBody TransferRequest req){
         bankService.transfer(req.fromAccountNumber(), req.toAccountNumber(), req.amount());
     }
 

@@ -4,6 +4,7 @@ import com.mauricio.bank.InsufficientFundsException;
 import com.mauricio.bank.AccountNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -36,5 +37,22 @@ public class ApiExceptionHandler {
                 "error", ex.getMessage(),
                 "timestamp", LocalDateTime.now()
         );
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, Object> validationError(MethodArgumentNotValidException ex){
+       var errors = ex.getBindingResult().getFieldErrors().stream().map(fe -> {
+           assert fe.getDefaultMessage() != null;
+           return Map.of(
+                   "field", fe.getField(),
+                   "message", fe.getDefaultMessage()
+           );
+       }).toList();
+
+       return Map.of(
+               "error", "VALIDATION_ERROR",
+               "details", errors
+       );
     }
 }
