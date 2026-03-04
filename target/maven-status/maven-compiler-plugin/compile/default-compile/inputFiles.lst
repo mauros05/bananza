@@ -8,7 +8,15 @@
 /Users/maurogutierrez/code/mauros05/java/bananza/src/main/java/com/mauricio/bank/TransactionType.java
 /Users/maurogutierrez/code/mauros05/java/bananza/src/main/java/com/mauricio/bank/api/ApiExceptionHandler.java
 /Users/maurogutierrez/code/mauros05/java/bananza/src/main/java/com/mauricio/bank/api/BankController.java
+/Users/maurogutierrez/code/mauros05/java/bananza/src/main/java/com/mauricio/bank/api/dto/AccountResponse.java
 /Users/maurogutierrez/code/mauros05/java/bananza/src/main/java/com/mauricio/bank/api/dto/CreateAccountRequest.java
 /Users/maurogutierrez/code/mauros05/java/bananza/src/main/java/com/mauricio/bank/api/dto/MoneyRequest.java
+/Users/maurogutierrez/code/mauros05/java/bananza/src/main/java/com/mauricio/bank/api/dto/TransactionResponse.java
 /Users/maurogutierrez/code/mauros05/java/bananza/src/main/java/com/mauricio/bank/api/dto/TransferRequest.java
+/Users/maurogutierrez/code/mauros05/java/bananza/src/main/java/com/mauricio/bank/api/dto/TransferResponse.java
 /Users/maurogutierrez/code/mauros05/java/bananza/src/main/java/com/mauricio/bank/config/BankConfig.java
+/Users/maurogutierrez/code/mauros05/java/bananza/src/main/java/com/mauricio/bank/persistence/AccountEntity.java
+/Users/maurogutierrez/code/mauros05/java/bananza/src/main/java/com/mauricio/bank/persistence/AccountRepository.java
+/Users/maurogutierrez/code/mauros05/java/bananza/src/main/java/com/mauricio/bank/persistence/TransactionEntity.java
+/Users/maurogutierrez/code/mauros05/java/bananza/src/main/java/com/mauricio/bank/persistence/TransactionRepository.java
+/Users/maurogutierrez/code/mauros05/java/bananza/src/main/java/com/mauricio/bank/service/BankService.java
