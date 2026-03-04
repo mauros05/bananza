@@ -1,6 +1,7 @@
 package com.mauricio.bank.service;
 
 import com.mauricio.bank.InsufficientFundsException;
+import com.mauricio.bank.AccountNotFoundException;
 import com.mauricio.bank.TransactionType;
 import com.mauricio.bank.persistence.*;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class BankService {
     @Transactional(readOnly = true)
     public AccountEntity getAccount(String accountNumber) {
         return accountRepo.findById(accountNumber)
-                .orElseThrow(() -> new IllegalArgumentException("Account not found: " + accountNumber));
+                .orElseThrow(() -> new AccountNotFoundException(accountNumber));
     }
 
     @Transactional
@@ -52,7 +53,7 @@ public class BankService {
         BigDecimal normalized = normalizeMoney(amount);
 
         AccountEntity account = accountRepo.findByAccountNumberForUpdate(accountNumber)
-                .orElseThrow(() -> new IllegalArgumentException("Account not found: " + accountNumber));
+                .orElseThrow(() -> new AccountNotFoundException(accountNumber));
 
         BigDecimal before = account.getBalance();
         BigDecimal after = before.add(normalized);
@@ -69,7 +70,7 @@ public class BankService {
         BigDecimal normalized = normalizeMoney(amount);
 
         AccountEntity account = accountRepo.findByAccountNumberForUpdate(accountNumber)
-                .orElseThrow(() -> new IllegalArgumentException("Account not found: " + accountNumber));
+                .orElseThrow(() -> new AccountNotFoundException(accountNumber));
 
         BigDecimal before = account.getBalance();
         if (before.compareTo(normalized) < 0) {
@@ -97,9 +98,9 @@ public class BankService {
         String second = fromAccountNumber.compareTo(toAccountNumber) < 0 ? toAccountNumber : fromAccountNumber;
 
         AccountEntity firstAcc = accountRepo.findByAccountNumberForUpdate(first)
-                .orElseThrow(() -> new IllegalArgumentException("Account not found: " + first));
+                .orElseThrow(() -> new AccountNotFoundException(first));
         AccountEntity secondAcc = accountRepo.findByAccountNumberForUpdate(second)
-                .orElseThrow(() -> new IllegalArgumentException("Account not found: " + second));
+                .orElseThrow(() -> new AccountNotFoundException(second));
 
         AccountEntity from = fromAccountNumber.equals(first) ? firstAcc : secondAcc;
         AccountEntity to = toAccountNumber.equals(first) ? firstAcc : secondAcc;
@@ -128,7 +129,7 @@ public class BankService {
     public List<TransactionEntity> getTransactions(String accountNumber) {
         // valida existencia
         if (!accountRepo.existsById(accountNumber)) {
-            throw new IllegalArgumentException("Account not found: " + accountNumber);
+            throw new AccountNotFoundException(accountNumber);
         }
         return txRepo.findByAccountNumberOrderByOccurredAtDesc(accountNumber);
     }

@@ -12,6 +12,7 @@ com/mauricio/bank/persistence/TransactionRepository.class
 com/mauricio/bank/api/dto/CreateAccountRequest.class
 com/mauricio/bank/persistence/AccountRepository.class
 com/mauricio/bank/TransactionType.class
+com/mauricio/bank/AccountNotFoundException.class
 com/mauricio/bank/api/ApiExceptionHandler.class
 com/mauricio/bank/Transaction.class
 com/mauricio/bank/ConsoleApp.class
