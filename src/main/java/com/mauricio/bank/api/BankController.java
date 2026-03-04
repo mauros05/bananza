@@ -1,12 +1,11 @@
 package com.mauricio.bank.api;
 
 import com.mauricio.bank.api.dto.*;
+import com.mauricio.bank.persistence.AccountEntity;
+import com.mauricio.bank.persistence.TransactionEntity;
 import com.mauricio.bank.service.BankService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import com.mauricio.bank.api.dto.AccountResponse;
-import com.mauricio.bank.api.dto.TransactionResponse;
-import com.mauricio.bank.api.dto.TransferResponse;
 
 import java.util.List;
 
@@ -44,9 +43,9 @@ public class BankController {
     }
 
     @PostMapping("/transfers")
-    public TransferResponse transfer(@RequestBody TransferRequest req){
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void transfer(@RequestBody TransferRequest req){
         bankService.transfer(req.fromAccountNumber(), req.toAccountNumber(), req.amount());
-        return new TransferResponse("Ok");
     }
 
     @GetMapping("/accounts/{accountNumber}/transactions")
@@ -54,11 +53,13 @@ public class BankController {
         return bankService.getTransactions(accountNumber).stream().map(this::toTransactionResponse).toList();
     }
 
-    private AccountResponse toAccountResponse(com.mauricio.bank.persistence.AccountEntity a){
+    // ---- Mappers ----
+
+    private AccountResponse toAccountResponse(AccountEntity a){
         return new AccountResponse(a.getAccountNumber(), a.getOwnerName(), a.getBalance());
     }
 
-    private TransactionResponse toTransactionResponse(com.mauricio.bank.persistence.TransactionEntity t){
+    private TransactionResponse toTransactionResponse(TransactionEntity t){
         return new TransactionResponse(
                 t.getId(),
                 t.getAccountNumber(),
