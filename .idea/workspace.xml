@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="01c81304-4e12-4df9-8a2a-f629f521908a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.mauricio.bank.BankTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.mauricio.bank.BankTest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.mauricio.bank.BankTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.mauricio.bank.BankTest.txt" afterDir="false" />
     </list>
@@ -18,9 +20,10 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
+        <option value="Dockerfile" />
+        <option value="Interface" />
         <option value="Record" />
         <option value="Class" />
-        <option value="Dockerfile" />
       </list>
     </option>
   </component>
@@ -41,6 +44,7 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Application.Main.executor&quot;: &quot;Coverage&quot;,
+    &quot;JUnit.BankControllerIT.withdraw_withoutFunds_returns422.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.BankTest.concurrentTransfers_doNotLoseMoney.executor&quot;: &quot;Run&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
@@ -63,7 +67,7 @@
       <recent name="com.mauricio.bank.api" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.BankTest.concurrentTransfers_doNotLoseMoney">
+  <component name="RunManager" selected="JUnit.BankControllerIT.createAccount_thenDeposit_thenGetAccount">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.mauricio.bank.Main" />
       <module name="bananza" />
@@ -73,6 +77,38 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BankControllerIT.createAccount_thenDeposit_thenGetAccount" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="bananza" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.mauricio.bank.api.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.mauricio.bank.api" />
+      <option name="MAIN_CLASS_NAME" value="com.mauricio.bank.api.BankControllerIT" />
+      <option name="METHOD_NAME" value="createAccount_thenDeposit_thenGetAccount" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BankControllerIT.withdraw_withoutFunds_returns422" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="bananza" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.mauricio.bank.api.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.mauricio.bank.api" />
+      <option name="MAIN_CLASS_NAME" value="com.mauricio.bank.api.BankControllerIT" />
+      <option name="METHOD_NAME" value="withdraw_withoutFunds_returns422" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -102,6 +138,8 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.BankControllerIT.createAccount_thenDeposit_thenGetAccount" />
+        <item itemvalue="JUnit.BankControllerIT.withdraw_withoutFunds_returns422" />
         <item itemvalue="JUnit.BankTest.concurrentTransfers_doNotLoseMoney" />
         <item itemvalue="Application.Main" />
       </list>
@@ -122,7 +160,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1771634374626</updated>
-      <workItem from="1771634375821" duration="62097000" />
+      <workItem from="1771634375821" duration="89117000" />
     </task>
     <servers />
   </component>
