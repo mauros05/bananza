@@ -6,6 +6,8 @@ import com.mauricio.bank.TransactionType;
 import com.mauricio.bank.persistence.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -126,12 +128,12 @@ public class BankService {
     }
 
     @Transactional(readOnly = true)
-    public List<TransactionEntity> getTransactions(String accountNumber) {
+    public Page<TransactionEntity> getTransactions(String accountNumber, Pageable pageable) {
         // valida existencia
         if (!accountRepo.existsById(accountNumber)) {
             throw new AccountNotFoundException(accountNumber);
         }
-        return txRepo.findByAccountNumberOrderByOccurredAtDesc(accountNumber);
+        return txRepo.findByAccountNumber(accountNumber, pageable);
     }
 
     // --- Helpers
